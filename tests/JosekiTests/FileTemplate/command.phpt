@@ -17,60 +17,64 @@ require_once __DIR__ . '/../bootstrap.php';
 class CommandTest extends \Tester\TestCase
 {
 
-	private function prepareConfigurator()
-	{
-		$configurator = new Configurator;
-		$configurator->setTempDirectory(TEMP_DIR);
-		$configurator->addParameters(array('container' => array('class' => 'SystemContainer_' . Random::generate())));
+    private function prepareConfigurator()
+    {
+        $configurator = new Configurator;
+        $configurator->setTempDirectory(TEMP_DIR);
+        $configurator->addParameters(array('container' => array('class' => 'SystemContainer_' . Random::generate())));
 
-		$configurator->onCompile[] = function ($configurator, Compiler $compiler) {
-			$compiler->addExtension('FileTemplate', new FileTemplateExtension());
-		};
+        $configurator->onCompile[] = function ($configurator, Compiler $compiler) {
+            $compiler->addExtension('FileTemplate', new FileTemplateExtension());
+        };
 
-		return $configurator;
-	}
+        return $configurator;
+    }
 
-	public function testOneCommand()
-	{
-		$configurator = $this->prepareConfigurator();
-		$configurator->addConfig(__DIR__ . '/config/config.one.command.neon', $configurator::NONE);
 
-		/** @var \Nette\DI\Container $container */
-		$container = $configurator->createContainer();
 
-		/** @var ControlCommand $commandService */
-		$commandService = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
+    public function testOneCommand()
+    {
+        $configurator = $this->prepareConfigurator();
+        $configurator->addConfig(__DIR__ . '/config/config.one.command.neon', $configurator::NONE);
 
-		$application = new Application();
-		$application->add($commandService);
+        /** @var \Nette\DI\Container $container */
+        $container = $configurator->createContainer();
 
-		$command = $application->find('joseki:fileTemplate');
-		$commandTester = new CommandTester($command);
+        /** @var ControlCommand $commandService */
+        $commandService = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
 
-		$helper = $command->getHelper('question');
-		$helper->setInputStream($this->getInputStream(sprintf('Foo%sBar%s', PHP_EOL, PHP_EOL)));
+        $application = new Application();
+        $application->add($commandService);
 
-		$commandTester->execute(
-			[
-				'command' => $command->getName(),
-				'name' => 'control',
-				'dir' => 'output'
-			]
-		);
+        $command = $application->find('joseki:fileTemplate');
+        $commandTester = new CommandTester($command);
 
-		Assert::match('#Created file:[^\n]*Foo.php#', $commandTester->getDisplay());
-		Assert::match('#Created file:[^\n]*FooFactory.php#', $commandTester->getDisplay());
-		Assert::match('#Created file:[^\n]*template.latte#', $commandTester->getDisplay());
-	}
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(sprintf('Foo%sBar%s', PHP_EOL, PHP_EOL)));
 
-	protected function getInputStream($input)
-	{
-		$stream = fopen('php://memory', 'r+', false);
-		fputs($stream, $input);
-		rewind($stream);
+        $commandTester->execute(
+            [
+                'command' => $command->getName(),
+                'name' => 'control',
+                'dir' => 'output'
+            ]
+        );
 
-		return $stream;
-	}
+        Assert::match('#Created file:[^\n]*Foo.php#', $commandTester->getDisplay());
+        Assert::match('#Created file:[^\n]*FooFactory.php#', $commandTester->getDisplay());
+        Assert::match('#Created file:[^\n]*template.latte#', $commandTester->getDisplay());
+    }
+
+
+
+    protected function getInputStream($input)
+    {
+        $stream = fopen('php://memory', 'r+', false);
+        fputs($stream, $input);
+        rewind($stream);
+
+        return $stream;
+    }
 }
 
 \run(new CommandTest());
