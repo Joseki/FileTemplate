@@ -58,9 +58,9 @@ class CommandTest extends \Tester\TestCase
 			]
 		);
 
-		Assert::match('#Joseki FileTemplate success#', $commandTester->getDisplay());
-
-		// ...
+		Assert::match('#Created file:[^\n]*Foo.php#', $commandTester->getDisplay());
+		Assert::match('#Created file:[^\n]*FooFactory.php#', $commandTester->getDisplay());
+		Assert::match('#Created file:[^\n]*template.latte#', $commandTester->getDisplay());
 	}
 
 	protected function getInputStream($input)
