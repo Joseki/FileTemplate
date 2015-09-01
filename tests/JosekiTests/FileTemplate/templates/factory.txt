@@ -1,0 +1,12 @@
+<?php
+
+namespace $NAMESPACE$;
+
+interface $CONTROL$Factory {
+
+	/**
+	 * @return $CONTROL$
+	 */
+	function create();
+
+}

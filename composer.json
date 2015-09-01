@@ -1,0 +1,32 @@
+{
+    "name": "joseki/file-template",
+    "type": "library",
+    "description": "PhpStorm FileTemplate generator for Nette Framework application using Symfony/Console.",
+    "keywords": ["joseki", "migrations", "database", "db", "database migrations"],
+    "license": "MIT",
+    "authors": [{
+        "name": "Miroslav Paulik",
+        "email": "miras.paulik@seznam.cz",
+        "homepage": "http://mirapaulik.cz",
+        "role": "Lead Developer"
+    }],
+    "require": {
+        "php": ">=5.3.2",
+        "nette/di": "~2.2",
+        "nette/utils": "~2.2",
+        "symfony/console": "~2.7",
+        "symfony/config": "~2.7",
+        "symfony/yaml": "~2.7"
+    },
+    "require-dev": {
+        "nette/tester": "~1.0",
+        "nette/bootstrap": "~2.2",
+        "mockery/mockery": "@stable"
+    },
+    "autoload": {
+        "classmap": ["src"]
+    },
+    "autoload-dev": {
+        "classmap": ["tests"]
+    }
+}

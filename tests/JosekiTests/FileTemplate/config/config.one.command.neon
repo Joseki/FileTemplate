@@ -1,0 +1,13 @@
+FileTemplate:
+  commands:
+    control:
+      variables: ['CONTROL', 'NAMESPACE']
+      templates:
+        CONTROL_FILE: '%appDir%/templates/control.txt'
+        FACTORY_FILE: '%appDir%/templates/factory.txt'
+        TEMPLATE_FILE: '%appDir%/templates/template.txt'
+      defaults:
+        CONTROL_FILE: '$CONTROL$.php'
+        FACTORY_FILE: '$CONTROL$Factory.php'
+        TEMPLATE_FILE: template.latte
+
