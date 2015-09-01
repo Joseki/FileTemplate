@@ -2,3 +2,4 @@
 
 vendor
 composer.lock
+tests/JosekiTests/coverage.dat

@@ -46,15 +46,30 @@ class CommandTest extends \Tester\TestCase
 
 		$command = $application->find('joseki:fileTemplate');
 		$commandTester = new CommandTester($command);
-		$commandTester->execute([
-			'command' => $command->getName(),
-			'name' => 'control',
-			'dir' => 'output'
-		]);
 
-		Assert::match('Joseki FileTemplate success', $commandTester->getDisplay());
+		$helper = $command->getHelper('question');
+		$helper->setInputStream($this->getInputStream(sprintf('Foo%sBar%s', PHP_EOL, PHP_EOL)));
+
+		$commandTester->execute(
+			[
+				'command' => $command->getName(),
+				'name' => 'control',
+				'dir' => 'output'
+			]
+		);
+
+		Assert::match('#Joseki FileTemplate success#', $commandTester->getDisplay());
 
 		// ...
+	}
+
+	protected function getInputStream($input)
+	{
+		$stream = fopen('php://memory', 'r+', false);
+		fputs($stream, $input);
+		rewind($stream);
+
+		return $stream;
 	}
 }
 

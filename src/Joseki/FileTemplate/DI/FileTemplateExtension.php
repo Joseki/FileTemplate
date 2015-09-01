@@ -15,7 +15,8 @@ class FileTemplateExtension extends CompilerExtension
 
 	public $defaults = [
 		'commands' => [],// prikaz pro generovani - obsahuje pole cest k sablonam
-	];// todo, co umisteni a namespace?
+		'rootDir' => null,
+	];
 
 	public function loadConfiguration()
 	{
@@ -29,8 +30,14 @@ class FileTemplateExtension extends CompilerExtension
 			$schemaList[$name] = $this->createSchema($name, $details);
 		}
 
+		if (!$config['rootDir']) {
+			$config['rootDir'] = $container->expand('%appDir%');
+		}
+
 		$container->addDefinition($this->prefix('controlCommand'))
-			->setClass('Joseki\Migration\Console\Command\ControlCommand', [$schemaList]);
+			->setClass('Joseki\Migration\Console\Command\ControlCommand', [$schemaList, $config['rootDir']])
+			->addTag('joseki.console.command')
+			->addTag('kdyby.console.command');
 
 	}
 
