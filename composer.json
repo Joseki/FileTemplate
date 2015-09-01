@@ -2,7 +2,7 @@
     "name": "joseki/file-template",
     "type": "library",
     "description": "PhpStorm FileTemplate generator for Nette Framework application using Symfony/Console.",
-    "keywords": ["joseki", "migrations", "database", "db", "database migrations"],
+    "keywords": ["joseki", "phpstorm", "file a code templates", "console"],
     "license": "MIT",
     "authors": [{
         "name": "Miroslav Paulik",
