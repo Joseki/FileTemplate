@@ -2,9 +2,9 @@
 
 namespace JosekiTests\FileTemplate;
 
-use Joseki\Console\DI\FileTemplateExtension;
+use Joseki\FileTemplate\DI\FileTemplateExtension;
 use Joseki\FileTemplate\Schema;
-use Joseki\Migration\Console\Command\ControlCommand;
+use Joseki\FileTemplate\Console\Command\ControlCommand;
 use Nette\Configurator;
 use Nette\DI\Compiler;
 use Nette\Utils\Random;
@@ -37,7 +37,7 @@ class ExtensionTest extends \Tester\TestCase
 		$container = $configurator->createContainer();
 
 		/** @var ControlCommand $command */
-		$command = $container->getByType('Joseki\Migration\Console\Command\ControlCommand');
+		$command = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
 		Assert::true($command instanceof ControlCommand);
 
 		$schemaList = $command->getSchemaList();

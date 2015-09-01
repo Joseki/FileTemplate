@@ -1,6 +1,6 @@
 <?php
 
-namespace Joseki\Migration\Console\Command;
+namespace Joseki\FileTemplate\Console\Command;
 
 use Joseki\FileTemplate\InvalidArgumentException;
 use Joseki\FileTemplate\Schema;

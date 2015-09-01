@@ -2,9 +2,9 @@
 
 namespace JosekiTests\FileTemplate;
 
-use Joseki\Console\DI\FileTemplateExtension;
+use Joseki\FileTemplate\DI\FileTemplateExtension;
 use Joseki\FileTemplate\Schema;
-use Joseki\Migration\Console\Command\ControlCommand;
+use Joseki\FileTemplate\Console\Command\ControlCommand;
 use Nette\Configurator;
 use Nette\DI\Compiler;
 use Nette\Utils\Random;
@@ -39,7 +39,7 @@ class CommandTest extends \Tester\TestCase
 		$container = $configurator->createContainer();
 
 		/** @var ControlCommand $commandService */
-		$commandService = $container->getByType('Joseki\Migration\Console\Command\ControlCommand');
+		$commandService = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
 
 		$application = new Application();
 		$application->add($commandService);

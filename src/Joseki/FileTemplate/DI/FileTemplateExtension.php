@@ -1,6 +1,6 @@
 <?php
 
-namespace Joseki\Console\DI;
+namespace Joseki\FileTemplate\DI;
 
 use Joseki\FileTemplate\InvalidArgumentException;
 use Joseki\FileTemplate\Schema;
@@ -35,7 +35,7 @@ class FileTemplateExtension extends CompilerExtension
 		}
 
 		$container->addDefinition($this->prefix('controlCommand'))
-			->setClass('Joseki\Migration\Console\Command\ControlCommand', [$schemaList, $config['rootDir']])
+			->setClass('Joseki\FileTemplate\Console\Command\ControlCommand', [$schemaList, $config['rootDir']])
 			->addTag('joseki.console.command')
 			->addTag('kdyby.console.command');
 
