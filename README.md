@@ -25,7 +25,7 @@ $ composer require joseki/file-template
 Setup
 -----
 
-- register compiler extension in your `config.neon`:
+Register compiler extension in your `config.neon`:
 
 ```yml
 extensions:
@@ -63,5 +63,6 @@ app/console joseki:fileTemplate control app/MyApplication/Auth
 ```
 
 NOTE: you will be prompted to define your file template variables
+
 NOTE: this extension should be compatible with [Joseki/Console](https://github.com/Joseki/Console) and [Kdyby/Console](https://github.com/Kdyby/Console).
 
