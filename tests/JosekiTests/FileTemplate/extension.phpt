@@ -44,11 +44,11 @@ class ExtensionTest extends \Tester\TestCase
 
         $schemaList = $command->getSchemaList();
         Assert::equal(1, count($schemaList));
-        Assert::true(array_key_exists('control', $schemaList));
+        Assert::true(array_key_exists('example1', $schemaList));
 
-        $schema = $schemaList['control'];
+        $schema = $schemaList['example1'];
         Assert::true($schema instanceof Schema);
-        Assert::same(['$CONTROL$', '$NAMESPACE$'], $schema->getUndefinedVariables());
+        Assert::same(['CONTROL', 'NAMESPACE'], $schema->getUndefinedVariables());
     }
 }
 

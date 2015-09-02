@@ -58,18 +58,18 @@ class FileTemplateExtension extends CompilerExtension
         }
 
         foreach ($command['variables'] as $var) {
-            $variables["$$var$"] = '';
+            $variables[$var] = '';
         }
 
         foreach ($defaults as $varName => $value) {
-            $variables["$$varName$"] = $value;
+            $variables[$varName] = $value;
         }
 
         foreach ($command['templates'] as $templateVar => $template) {
             if (!file_exists($template)) {
                 throw new InvalidArgumentException("Template file '$template' used in FileTemplate command '$name' not found.");
             }
-            if (!array_key_exists("$$templateVar$", $variables)) {
+            if (!array_key_exists($templateVar, $variables)) {
                 throw new InvalidArgumentException(
                     "Missing variable '$templateVar' in FileTemplate command '$name'. Templates must be in 'FILE_NAME_VAR: path/to/template' notation."
                 );

@@ -1,11 +1,11 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace ${NAMESPACE};
 
-interface $CONTROL$Factory {
+interface ${CONTROL}Factory {
 
 	/**
-	 * @return $CONTROL$
+	 * @return ${CONTROL}
 	 */
 	function create();
 

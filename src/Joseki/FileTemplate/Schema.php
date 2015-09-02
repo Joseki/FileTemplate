@@ -11,9 +11,6 @@ class Schema
     /** @var array */
     private $variables;
 
-    /** @var array */
-    private $undefinedVariables;
-
 
 
     /**
@@ -25,9 +22,6 @@ class Schema
     {
         $this->variables = $variables;
         $this->files = $files;
-
-        $keys = array_keys($variables, null);
-        $this->undefinedVariables = array_intersect_key($variables, array_flip($keys));
     }
 
 
@@ -37,7 +31,10 @@ class Schema
      */
     public function getUndefinedVariables()
     {
-        return array_keys($this->undefinedVariables);
+        $keys = array_keys($this->variables, null);
+        $undefinedVariables = array_intersect_key($this->variables, array_flip($keys));
+
+        return array_keys($undefinedVariables);
     }
 
 
@@ -55,11 +52,11 @@ class Schema
 
     public function getVariable($var)
     {
-        if (!array_key_exists("$$var$", $this->variables)) {
+        if (!array_key_exists($var, $this->variables)) {
             throw new InvalidArgumentException("Variable '$var' not found");
         }
 
-        return $this->translate($this->variables["$$var$"]);
+        return $this->translate($this->variables[$var]);
     }
 
 
@@ -74,8 +71,19 @@ class Schema
 
 
 
+    private function format($var)
+    {
+        return sprintf('${%s}', $var);
+    }
+
+
+
     public function translate($value)
     {
-        return str_replace(array_keys($this->variables), $this->variables, $value);
+        $formattedVars = [];
+        foreach (array_keys($this->variables) as $var) {
+            $formattedVars[] = $this->format($var);
+        }
+        return str_replace($formattedVars, $this->variables, $value);
     }
 }

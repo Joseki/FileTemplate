@@ -46,7 +46,7 @@ class CommandTest extends \Tester\TestCase
         $application = new Application();
         $application->add($commandService);
 
-        $command = $application->find('joseki:fileTemplate');
+        $command = $application->find('joseki:create-file');
         $commandTester = new CommandTester($command);
 
         $helper = $command->getHelper('question');
@@ -55,7 +55,7 @@ class CommandTest extends \Tester\TestCase
         $commandTester->execute(
             [
                 'command' => $command->getName(),
-                'name' => 'control',
+                'name' => 'example1',
                 'dir' => 'output'
             ]
         );
