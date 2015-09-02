@@ -49,7 +49,7 @@ class ControlCommand extends Command
 
     protected function configure()
     {
-        $this->setName('joseki:create-files');
+        $this->setName('joseki:file-templates');
         $this->setDescription('FileTemplate generator');
 
         $this->addArgument(

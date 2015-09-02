@@ -22,10 +22,17 @@ The best way to install Joseki/FileTemplate is using  [Composer](http://getcompo
 $ composer require joseki/file-template
 ```
 
-Setup
------
-
 Register compiler extension in your `config.neon`:
+
+```yml
+extensions:
+  FileTemplate: Joseki\FileTemplate\DI\FileTemplateExtension
+```
+
+Example
+-------
+
+Add the following to your `config.neon`:
 
 ```yml
 extensions:
@@ -37,15 +44,15 @@ FileTemplate:
 
   # list of file templates groups
   commands:
-    control: # group name
+    example1: # group name used in command line
       variables: ['CONTROL', 'NAMESPACE']
       templates:
         CONTROL_FILE: '%appDir%/templates/control.txt'
         FACTORY_FILE: '%appDir%/templates/factory.txt'
         TEMPLATE_FILE: '%appDir%/templates/template.txt'
       defaults: # [OPTIONAL] default values for variables
-        CONTROL_FILE: '$CONTROL$.php'
-        FACTORY_FILE: '$CONTROL$Factory.php'
+        CONTROL_FILE: '${CONTROL}.php'
+        FACTORY_FILE: '${CONTROL}Factory.php'
         TEMPLATE_FILE: template.latte
 ```
 
@@ -53,13 +60,13 @@ Running a console command
 -------------------------
 
 ```sh
-app/console joseki:fileTemplate COMMAND RELATIVE_DIRECTORY
+app/console joseki:file-template COMMAND RELATIVE_DIRECTORY
 ```
 
 for example:
 
 ```sh
-app/console joseki:fileTemplate control app/MyApplication/Auth
+app/console joseki:file-template example1 app/MyApplication/Auth
 ```
 
 NOTE: you will be prompted to define your file template variables
