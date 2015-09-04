@@ -18,6 +18,11 @@ class FileTemplateExtension extends CompilerExtension
         'rootDir' => null,
     ];
 
+    private $variables = [
+        'NAMESPACE' => null,
+        'DS' => '$',
+    ];
+
 
 
     public function loadConfiguration()
@@ -47,18 +52,18 @@ class FileTemplateExtension extends CompilerExtension
 
     private function createSchema($name, $command)
     {
-        $variables = [];
-        $defaults = [];
+        $variables = array_keys($this->variables);
+        $defaults = $this->variables;
 
         Validators::assert($command['variables'], 'array');
         Validators::assert($command['templates'], 'array');
         if (isset($command['defaults'])) {
             Validators::assert($command['defaults'], 'array');
-            $defaults = $command['defaults'];
+            $defaults += $command['defaults'];
         }
 
         foreach ($command['variables'] as $var) {
-            $variables[$var] = '';
+            $variables[$var] = null;
         }
 
         foreach ($defaults as $varName => $value) {
