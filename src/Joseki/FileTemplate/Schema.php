@@ -2,6 +2,8 @@
 
 namespace Joseki\FileTemplate;
 
+use Nette\Utils\Strings;
+
 class Schema
 {
 
@@ -10,6 +12,8 @@ class Schema
 
     /** @var array */
     private $variables;
+    
+    private $resolved = false;
 
 
 
@@ -45,6 +49,9 @@ class Schema
      */
     public function setVariable($var, $answer)
     {
+        if ($this->resolved) {
+            throw new InvalidStateException("Cannot set variable '$var'. Variables has been already resolved and used in translation. This will lead into translation inconsistency.");
+        }
         $this->variables[$var] = $answer;
     }
 
@@ -56,7 +63,7 @@ class Schema
             throw new InvalidArgumentException("Variable '$var' not found");
         }
 
-        return $this->translate($this->variables[$var]);
+        return $this->translateValue($this->variables, $this->variables[$var]);
     }
 
 
@@ -80,10 +87,58 @@ class Schema
 
     public function translate($value)
     {
+        $this->resolveVariables();
+        return $this->translateValue($this->variables, $value);
+    }
+
+
+
+    private function translateValue($variables, $value)
+    {
         $formattedVars = [];
-        foreach (array_keys($this->variables) as $var) {
+        foreach (array_keys($variables) as $var) {
             $formattedVars[] = $this->format($var);
         }
-        return str_replace($formattedVars, $this->variables, $value);
+        return str_replace($formattedVars, $variables, $value);
+    }
+
+
+
+    /**
+     * @internal
+     */
+    public function resolveVariables()
+    {
+        if ($this->resolved) {
+            return;
+        }
+
+        $variables = $this->variables;
+
+        for ($i = 0; $i < count($this->variables); $i++) {
+            $definedVars = [];
+            foreach ($this->variables as $key => $value) {
+                if (!Strings::match($value, '#\${\w+}#')) {
+                    $definedVars[$key] = $value;
+                    unset($variables[$key]);
+                }
+            }
+            if (count($variables) === 0) {
+                break;
+            }
+            foreach ($this->variables as $key => $value) {
+                $this->setVariable($key, $this->translateValue($definedVars, $value));
+            }
+        }
+
+        foreach ($this->variables as $key => $value) {
+            if (Strings::match($value, '#\${\w+}#')) {
+                throw new InvalidStateException(
+                    "Variable '$key' ('$value') could not be resolved. Perhaps due undefined variable or circular dependencies."
+                );
+            }
+        }
+
+        $this->resolved = true;
     }
 }

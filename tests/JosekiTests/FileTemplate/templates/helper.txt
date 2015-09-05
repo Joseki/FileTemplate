@@ -1,0 +1,9 @@
+<?php
+
+class ${CLASS|firstUpper} {
+
+    /**
+     * @var \Forms\${CLASS|firstUpper} @inject
+     */
+    public $${CLASS}Form;
+}

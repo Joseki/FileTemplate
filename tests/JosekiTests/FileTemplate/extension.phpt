@@ -50,6 +50,26 @@ class ExtensionTest extends \Tester\TestCase
         Assert::true($schema instanceof Schema);
         Assert::same(['CONTROL', 'NAMESPACE'], $schema->getUndefinedVariables());
     }
+
+
+
+    public function testVariableDefaults()
+    {
+        $configurator = $this->prepareConfigurator();
+        $configurator->addConfig(__DIR__ . '/config/config.variable.defaults.neon', $configurator::NONE);
+
+        /** @var \Nette\DI\Container $container */
+        $container = $configurator->createContainer();
+
+        /** @var ControlCommand $command */
+        $command = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
+
+        $schemaList = $command->getSchemaList();
+        $schema = $schemaList['helper_test'];
+
+        Assert::same(['CLASS', 'NAMESPACE'], $schema->getUndefinedVariables());
+        Assert::equal('', $schema->getVariable('CLASS'));
+    }
 }
 
 \run(new ExtensionTest());

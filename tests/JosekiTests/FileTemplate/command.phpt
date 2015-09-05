@@ -3,7 +3,6 @@
 namespace JosekiTests\FileTemplate;
 
 use Joseki\FileTemplate\DI\FileTemplateExtension;
-use Joseki\FileTemplate\Schema;
 use Joseki\FileTemplate\Console\Command\ControlCommand;
 use Nette\Configurator;
 use Nette\DI\Compiler;
@@ -63,6 +62,10 @@ class CommandTest extends \Tester\TestCase
         Assert::match('#Created file:[^\n]*Foo.php#', $commandTester->getDisplay());
         Assert::match('#Created file:[^\n]*FooFactory.php#', $commandTester->getDisplay());
         Assert::match('#Created file:[^\n]*template.latte#', $commandTester->getDisplay());
+
+        $this->assertFiles(__DIR__ . '/files/expected.Foo.php', __DIR__ . '/output/Foo.php');
+        $this->assertFiles(__DIR__ . '/files/expected.FooFactory.php', __DIR__ . '/output/FooFactory.php');
+        $this->assertFiles(__DIR__ . '/files/expected.template.latte', __DIR__ . '/output/template.latte');
     }
 
 
@@ -74,6 +77,15 @@ class CommandTest extends \Tester\TestCase
         rewind($stream);
 
         return $stream;
+    }
+
+
+
+    protected function assertFiles($expected, $actual)
+    {
+        Assert::true(file_exists($expected));
+        Assert::true(file_exists($actual));
+        Assert::equal(file_get_contents($expected), file_get_contents($actual));
     }
 }
 
