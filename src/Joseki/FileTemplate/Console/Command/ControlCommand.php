@@ -94,9 +94,9 @@ class ControlCommand extends Command
     {
         $schema = $this->schemaList[$this->selectedSchema];
         $dir = $this->rootDir . '/' . $this->selectedDir;
-        @mkdir($dir);
         foreach ($schema->getFiles() as $var => $templatePath) {
             $fileName = $dir . '/' . $schema->getVariable($var);
+            @mkdir(dirname($fileName));
             $content = $schema->translate(file_get_contents($templatePath));
             file_put_contents($fileName, $content);
             $output->writeln('Created file: ' . $fileName);

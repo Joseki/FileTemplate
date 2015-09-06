@@ -70,6 +70,40 @@ class CommandTest extends \Tester\TestCase
 
 
 
+    public function testDirectory()
+    {
+        $configurator = $this->prepareConfigurator();
+        $configurator->addConfig(__DIR__ . '/config/config.directory.neon', $configurator::NONE);
+
+        /** @var \Nette\DI\Container $container */
+        $container = $configurator->createContainer();
+
+        /** @var ControlCommand $commandService */
+        $commandService = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
+
+        $application = new Application();
+        $application->add($commandService);
+
+        $command = $application->find('joseki:file-template');
+        $commandTester = new CommandTester($command);
+
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(sprintf('My%sApplication%s', PHP_EOL, PHP_EOL)));
+
+        $commandTester->execute(
+            [
+                'command' => $command->getName(),
+                'name' => 'presenter',
+                'dir' => 'output'
+            ]
+        );
+
+        $this->assertFiles(__DIR__ . '/files/expected.MyPresenter.php', __DIR__ . '/output/MyPresenter.php');
+        $this->assertFiles(__DIR__ . '/files/expected.MyPresenter.default.latte', __DIR__ . '/output/My/default.latte');
+    }
+
+
+
     protected function getInputStream($input)
     {
         $stream = fopen('php://memory', 'r+', false);
