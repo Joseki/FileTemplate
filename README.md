@@ -60,14 +60,32 @@ Running a console command
 -------------------------
 
 ```sh
-app/console joseki:file-template COMMAND RELATIVE_DIRECTORY
+app/console joseki:file-template COMMAND [--dir=RELATIVE_DIRECTORY]
 ```
 
 for example:
 
 ```sh
-app/console joseki:file-template example1 app/MyApplication/Auth
+app/console joseki:file-template example1
 ```
+
+Suppose that variables `${CONTROL} = Hello` and `${NAMESPACE} = Foo`, then the previous command will create these files:
+
+- %appDir%/Foo/Hello.php
+- %appDir%/Foo/HelloFactory.php
+- %appDir%/Foo/template.latte
+
+and when a directory is specified:
+
+```sh
+app/console joseki:file-template example1 --dir=MyApplication/Auth
+```
+
+...these files will be created:
+
+- %appDir%/MyApplication/Auth/Hello.php
+- %appDir%/MyApplication/Auth/HelloFactory.php
+- %appDir%/MyApplication/Auth/template.latte
 
 NOTE: you will be prompted to define your file template variables
 
