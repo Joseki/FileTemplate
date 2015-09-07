@@ -1,0 +1,13 @@
+FileTemplate:
+  # root dir for new files
+  rootDir: '%appDir%/output' # [OPTIONAL], %appDir% is default
+
+  # list of file templates groups
+  commands:
+    namespace: # group name
+      variables: []
+      templates:
+        PRESENTER_FILE: '%appDir%/templates/namespace.txt'
+      defaults: # [OPTIONAL] default values for variables
+        PRESENTER_FILE: 'Presenter.php'
+

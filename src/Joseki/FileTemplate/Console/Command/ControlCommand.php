@@ -7,6 +7,7 @@ use Joseki\FileTemplate\Schema;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
@@ -58,10 +59,11 @@ class ControlCommand extends Command
             'Which command (set of templates) are you going to create?'
         );
 
-        $this->addArgument(
+        $this->addOption(
             'dir',
-            InputArgument::REQUIRED,
-            'Directory for new files?'
+            null,
+            InputOption::VALUE_REQUIRED,
+            'Specify relative directory'
         );
     }
 
@@ -71,7 +73,6 @@ class ControlCommand extends Command
     {
 
         $this->selectedSchema = $input->getArgument('name');
-        $this->selectedDir = trim($input->getArgument('dir'), '/\\');
 
         $helper = $this->getHelper('question');
 
@@ -86,6 +87,12 @@ class ControlCommand extends Command
             $schema->setVariable($var, $answer);
         }
 
+        $dir = $input->getOption('dir');
+        if (!$dir) {
+            $dir = str_replace('\\', '/', $schema->getVariable('NAMESPACE'));
+        }
+        $this->selectedDir = trim($dir, '/\\');
+
     }
 
 
@@ -96,7 +103,7 @@ class ControlCommand extends Command
         $dir = $this->rootDir . '/' . $this->selectedDir;
         foreach ($schema->getFiles() as $var => $templatePath) {
             $fileName = $dir . '/' . $schema->getVariable($var);
-            @mkdir(dirname($fileName));
+            @mkdir(dirname($fileName), 0777, true);
             $content = $schema->translate(file_get_contents($templatePath));
             file_put_contents($fileName, $content);
             $output->writeln('Created file: ' . $fileName);

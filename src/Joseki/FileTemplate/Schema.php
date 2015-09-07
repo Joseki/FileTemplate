@@ -12,7 +12,7 @@ class Schema
 
     /** @var array */
     private $variables;
-    
+
     private $resolved = false;
 
 
