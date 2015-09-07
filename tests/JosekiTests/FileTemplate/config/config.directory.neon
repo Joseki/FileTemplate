@@ -1,0 +1,15 @@
+FileTemplate:
+  # root dir for new files
+  rootDir: '%appDir%' # [OPTIONAL], %appDir% is default
+
+  # list of file templates groups
+  commands:
+    presenter: # group name
+      variables: ['NAME', 'NAMESPACE']
+      templates:
+        PRESENTER_FILE: '%appDir%/templates/presenter.txt'
+        TEMPLATE_FILE: '%appDir%/templates/presenter.template.txt'
+      defaults: # [OPTIONAL] default values for variables
+        PRESENTER_FILE: '${NAME}Presenter.php'
+        TEMPLATE_FILE: '${NAME}/default.latte'
+
