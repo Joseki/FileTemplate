@@ -52,14 +52,14 @@ class FileTemplateExtension extends CompilerExtension
 
     private function createSchema($name, $command)
     {
-        $variables = array_keys($this->variables);
+        $variables = $this->variables;
         $defaults = $this->variables;
 
         Validators::assert($command['variables'], 'array');
         Validators::assert($command['templates'], 'array');
         if (isset($command['defaults'])) {
             Validators::assert($command['defaults'], 'array');
-            $defaults += $command['defaults'];
+            $defaults = array_merge($defaults, $command['defaults']);
         }
 
         foreach ($command['variables'] as $var) {

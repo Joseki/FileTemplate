@@ -1,0 +1,23 @@
+parameters:
+  fileTemplateDir: %appDir%/templates
+
+FileTemplate:
+  # root dir for new files
+  rootDir: '%appDir%/output' # [OPTIONAL], %appDir% is default
+
+  # list of file templates groups
+  commands:
+    module: # group name
+      variables: ['NAME', 'PARENT_MODULE']
+      templates:
+        PRESENTER_FILE: '%fileTemplateDir%/module.presenter.txt'
+        HOMEPAGE_PRESENTER_FILE: '%fileTemplateDir%/module.presenter.homepage.txt'
+        TEMPLATE_FILE: '%fileTemplateDir%/module.template.txt'
+        LAYOUT_FILE: '%fileTemplateDir%/module.layout.txt'
+      defaults: # [OPTIONAL] default values for variables
+        PRESENTER_FILE: 'Presenter.php'
+        HOMEPAGE_PRESENTER_FILE: 'HomepagePresenter.php'
+        TEMPLATE_FILE: 'Homepage/default.latte'
+        LAYOUT_FILE: '@layout.latte'
+        NAMESPACE: 'Demo\Application\${PARENT_MODULE}\${NAME}'
+

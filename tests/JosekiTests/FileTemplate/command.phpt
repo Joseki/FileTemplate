@@ -49,7 +49,7 @@ class CommandTest extends \Tester\TestCase
         $commandTester = new CommandTester($command);
 
         $helper = $command->getHelper('question');
-        $helper->setInputStream($this->getInputStream(sprintf('Foo%sBar%s', PHP_EOL, PHP_EOL)));
+        $helper->setInputStream($this->getInputStream(sprintf('Bar%sFoo%s', PHP_EOL, PHP_EOL)));
 
         $commandTester->execute(
             [
@@ -59,9 +59,7 @@ class CommandTest extends \Tester\TestCase
             ]
         );
 
-        Assert::match('#Created file:[^\n]*Foo.php#', $commandTester->getDisplay());
-        Assert::match('#Created file:[^\n]*FooFactory.php#', $commandTester->getDisplay());
-        Assert::match('#Created file:[^\n]*template.latte#', $commandTester->getDisplay());
+        Assert::matchFile(__DIR__ . '/files/expected.command.one.out', $commandTester->getDisplay());
 
         $this->assertFiles(__DIR__ . '/files/expected.Foo.php', __DIR__ . '/output/Foo.php');
         $this->assertFiles(__DIR__ . '/files/expected.FooFactory.php', __DIR__ . '/output/FooFactory.php');
@@ -88,7 +86,7 @@ class CommandTest extends \Tester\TestCase
         $commandTester = new CommandTester($command);
 
         $helper = $command->getHelper('question');
-        $helper->setInputStream($this->getInputStream(sprintf('My%sApplication%s', PHP_EOL, PHP_EOL)));
+        $helper->setInputStream($this->getInputStream(sprintf('Application%sMy%s', PHP_EOL, PHP_EOL)));
 
         $commandTester->execute(
             [
@@ -132,6 +130,43 @@ class CommandTest extends \Tester\TestCase
         );
 
         $this->assertFiles(__DIR__ . '/files/expected.namespace.php', __DIR__ . '/output/My/Application/Presenters/Presenter.php');
+    }
+
+
+
+    public function testDefaultNamespace()
+    {
+        $configurator = $this->prepareConfigurator();
+        $configurator->addConfig(__DIR__ . '/config/config.module.neon', $configurator::NONE);
+
+        /** @var \Nette\DI\Container $container */
+        $container = $configurator->createContainer();
+
+        /** @var ControlCommand $commandService */
+        $commandService = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
+
+        $application = new Application();
+        $application->add($commandService);
+
+        $command = $application->find('joseki:file-template');
+        $commandTester = new CommandTester($command);
+
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(sprintf('Foo%sAdmin%s', PHP_EOL, PHP_EOL)));
+
+        $commandTester->execute(
+            [
+                'command' => $command->getName(),
+                'name' => 'module'
+            ]
+        );
+
+        Assert::matchFile(__DIR__ . '/files/expected.command.defaults.out', $commandTester->getDisplay());
+
+        $this->assertFiles(__DIR__ . '/files/expected.module.Presenter.php', __DIR__ . '/output/Demo/Application/Admin/Foo/Presenter.php');
+        $this->assertFiles(__DIR__ . '/files/expected.module.HomepagePresenter.php', __DIR__ . '/output/Demo/Application/Admin/Foo/HomepagePresenter.php');
+        $this->assertFiles(__DIR__ . '/files/expected.module.template.latte', __DIR__ . '/output/Demo/Application/Admin/Foo/Homepage/default.latte');
+        $this->assertFiles(__DIR__ . '/files/expected.module.layout.latte', __DIR__ . '/output/Demo/Application/Admin/Foo/@layout.latte');
     }
 
 

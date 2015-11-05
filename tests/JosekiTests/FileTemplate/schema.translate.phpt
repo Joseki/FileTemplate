@@ -73,31 +73,8 @@ class SchemaTranslationTest extends \Tester\TestCase
             'Cannot set variable \'HELLO\'. Variables has been already resolved and used in translation. This will lead into translation inconsistency.'
         );
     }
-//
-//
-//
-//    public function testTranslation()
-//    {
-//        $schema = new Schema(
-//            [
-//                'CLASS' => 'helperTest',
-//                'CLONE' => '${CLASS}',
-//                'FILTER_LOWER' => '${CLASS|lower}',
-//                'FILTER_FIRST_UPPER' => '${CLASS|firstUpper}',
-//                'DOUBLE_FILTER' => '${CLASS|lower|firstUpper}',
-//                'FILTER_ORDER' => '${CLASS|firstUpper|lower}',
-//            ], []
-//        );
-//
-//        Assert::equal('Foo', $schema->translate('Foo'));
-//        Assert::equal('helperTest', $schema->translate('${CLASS}'));
-//        Assert::equal('helperTest', $schema->translate('${CLONE}'));
-//        Assert::equal('helpertest', $schema->translate('${FILTER_LOWER}'));
-//        Assert::equal('HelperTest', $schema->translate('${FILTER_FIRST_UPPER}'));
-//        Assert::equal('Helpertest', $schema->translate('${DOUBLE_FILTER}'));
-//        Assert::equal('helpertest', $schema->translate('${FILTER_ORDER}'));
-//    }
-//
+
+
 
     public function testCircularSimple()
     {
@@ -127,6 +104,37 @@ class SchemaTranslationTest extends \Tester\TestCase
             'Joseki\FileTemplate\InvalidStateException',
             "Variable 'FOO' ('\${BAR}') could not be resolved. Perhaps due undefined variable or circular dependencies."
         );
+    }
+
+
+
+    public function testDefaults()
+    {
+        /** @var Schema $schema */
+        $schema = \Nette\PhpGenerator\Helpers::createObject('Joseki\FileTemplate\Schema', array(
+            "\x00Joseki\\FileTemplate\\Schema\x00files" => array(
+                'PRESENTER_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.presenter.txt',
+                'HOMEPAGE_PRESENTER_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.presenter.homepage.txt',
+                'TEMPLATE_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.template.txt',
+                'LAYOUT_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.layout.txt',
+            ),
+            "\x00Joseki\\FileTemplate\\Schema\x00variables" => array(
+                'NAMESPACE' => 'Demo\Application\${PARENT_MODULE}\${NAME}',
+                'DS' => '$',
+                'NAME' => 'Foo',
+                'PARENT_MODULE' => 'Admin',
+                'PRESENTER_FILE' => 'Presenter.php',
+                'HOMEPAGE_PRESENTER_FILE' => 'HomepagePresenter.php',
+                'TEMPLATE_FILE' => 'Homepage/default.latte',
+                'LAYOUT_FILE' => '@layout.latte',
+            ),
+            "\x00Joseki\\FileTemplate\\Schema\x00resolved" => FALSE,
+        ));
+
+        Assert::true($schema instanceof Schema);
+        Assert::equal('Foo', $schema->getVariable('NAME'));
+        Assert::equal('Admin', $schema->getVariable('PARENT_MODULE'));
+        Assert::equal('Demo\Application\Admin\Foo', $schema->getVariable('NAMESPACE'));
     }
 
 }

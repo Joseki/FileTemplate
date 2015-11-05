@@ -48,7 +48,7 @@ class ExtensionTest extends \Tester\TestCase
 
         $schema = $schemaList['example1'];
         Assert::true($schema instanceof Schema);
-        Assert::same(['CONTROL', 'NAMESPACE'], $schema->getUndefinedVariables());
+        Assert::same(['NAMESPACE', 'CONTROL'], $schema->getUndefinedVariables());
     }
 
 
@@ -67,7 +67,7 @@ class ExtensionTest extends \Tester\TestCase
         $schemaList = $command->getSchemaList();
         $schema = $schemaList['helper_test'];
 
-        Assert::same(['CLASS', 'NAMESPACE'], $schema->getUndefinedVariables());
+        Assert::same(['NAMESPACE', 'CLASS'], $schema->getUndefinedVariables());
         Assert::equal('', $schema->getVariable('CLASS'));
     }
 }
