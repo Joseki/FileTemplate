@@ -59,7 +59,9 @@ class CommandTest extends \Tester\TestCase
             ]
         );
 
-        Assert::matchFile(__DIR__ . '/files/expected.command.one.out', $commandTester->getDisplay());
+        Assert::match('#Created file:[^\n]*Foo.php#', $commandTester->getDisplay());
+        Assert::match('#Created file:[^\n]*FooFactory.php#', $commandTester->getDisplay());
+        Assert::match('#Created file:[^\n]*template.latte#', $commandTester->getDisplay());
 
         $this->assertFiles(__DIR__ . '/files/expected.Foo.php', __DIR__ . '/output/Foo.php');
         $this->assertFiles(__DIR__ . '/files/expected.FooFactory.php', __DIR__ . '/output/FooFactory.php');
@@ -160,9 +162,7 @@ class CommandTest extends \Tester\TestCase
                 'name' => 'module'
             ]
         );
-
-        Assert::matchFile(__DIR__ . '/files/expected.command.defaults.out', $commandTester->getDisplay());
-
+        
         $this->assertFiles(__DIR__ . '/files/expected.module.Presenter.php', __DIR__ . '/output/Demo/Application/Admin/Foo/Presenter.php');
         $this->assertFiles(__DIR__ . '/files/expected.module.HomepagePresenter.php', __DIR__ . '/output/Demo/Application/Admin/Foo/HomepagePresenter.php');
         $this->assertFiles(__DIR__ . '/files/expected.module.template.latte', __DIR__ . '/output/Demo/Application/Admin/Foo/Homepage/default.latte');
