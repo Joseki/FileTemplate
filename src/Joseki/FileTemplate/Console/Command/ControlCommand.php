@@ -4,6 +4,7 @@ namespace Joseki\FileTemplate\Console\Command;
 
 use Joseki\FileTemplate\InvalidArgumentException;
 use Joseki\FileTemplate\Schema;
+use Joseki\Utils\FileSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -106,7 +107,7 @@ class ControlCommand extends Command
             @mkdir(dirname($fileName), 0777, true);
             $content = $schema->translate(file_get_contents($templatePath));
             file_put_contents($fileName, $content);
-            $output->writeln('Created file: ' . $fileName);
+            $output->writeln('Created file: ' . FileSystem::normalizePath($fileName));
         }
     }
 }
