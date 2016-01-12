@@ -2,7 +2,6 @@
 
 namespace Joseki\FileTemplate\Console\Command;
 
-use Joseki\FileTemplate\InvalidArgumentException;
 use Joseki\FileTemplate\Schema;
 use Joseki\Utils\FileSystem;
 use Symfony\Component\Console\Command\Command;
@@ -10,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
 class ControlCommand extends Command
@@ -56,7 +56,7 @@ class ControlCommand extends Command
 
         $this->addArgument(
             'name',
-            InputArgument::REQUIRED,
+            InputArgument::OPTIONAL,
             'Which command (set of templates) are you going to create?'
         );
 
@@ -72,18 +72,25 @@ class ControlCommand extends Command
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-
+        $helper = $this->getHelper('question');
         $this->selectedSchema = $input->getArgument('name');
 
-        $helper = $this->getHelper('question');
-
         if (!array_key_exists($this->selectedSchema, $this->schemaList)) {
-            throw new InvalidArgumentException("FileTemplate name '{$this->selectedSchema}' not found.");
+            $question = new ChoiceQuestion('Please select of of the following templates:', array_keys($this->schemaList));
+            $validator = function ($answer) use ($output) {
+                if (!array_key_exists($answer, $this->schemaList)) {
+                    throw new \RuntimeException('The name of the template not found');
+                }
+                return $answer;
+            };
+            $question->setValidator($validator);
+            $question->setMaxAttempts(2);
+            $this->selectedSchema = $helper->ask($input, $output, $question);
         }
 
         $schema = $this->schemaList[$this->selectedSchema];
         foreach ($schema->getUndefinedVariables() as $var) {
-            $question = new Question("Please enter value for variable $var:");
+            $question = new Question(sprintf('Please enter value for variable %s:', $var));
             $answer = $helper->ask($input, $output, $question);
             $schema->setVariable($var, $answer);
         }
