@@ -34,7 +34,7 @@ class CommandTest extends \Tester\TestCase
     public function testOneCommand()
     {
         $configurator = $this->prepareConfigurator();
-        $configurator->addConfig(__DIR__ . '/config/config.one.command.neon', $configurator::NONE);
+        $configurator->addConfig(__DIR__ . '/config/config.one.command.neon');
 
         /** @var \Nette\DI\Container $container */
         $container = $configurator->createContainer();
@@ -73,7 +73,7 @@ class CommandTest extends \Tester\TestCase
     public function testDirectory()
     {
         $configurator = $this->prepareConfigurator();
-        $configurator->addConfig(__DIR__ . '/config/config.directory.neon', $configurator::NONE);
+        $configurator->addConfig(__DIR__ . '/config/config.directory.neon');
 
         /** @var \Nette\DI\Container $container */
         $container = $configurator->createContainer();
@@ -107,7 +107,7 @@ class CommandTest extends \Tester\TestCase
     public function testDirectoryFromNamespace()
     {
         $configurator = $this->prepareConfigurator();
-        $configurator->addConfig(__DIR__ . '/config/config.directory.namespace.neon', $configurator::NONE);
+        $configurator->addConfig(__DIR__ . '/config/config.directory.namespace.neon');
 
         /** @var \Nette\DI\Container $container */
         $container = $configurator->createContainer();
@@ -139,7 +139,7 @@ class CommandTest extends \Tester\TestCase
     public function testDefaultNamespace()
     {
         $configurator = $this->prepareConfigurator();
-        $configurator->addConfig(__DIR__ . '/config/config.module.neon', $configurator::NONE);
+        $configurator->addConfig(__DIR__ . '/config/config.module.neon');
 
         /** @var \Nette\DI\Container $container */
         $container = $configurator->createContainer();
@@ -167,6 +167,40 @@ class CommandTest extends \Tester\TestCase
         $this->assertFiles(__DIR__ . '/files/expected.module.HomepagePresenter.php', __DIR__ . '/output/Demo/Application/Admin/Foo/HomepagePresenter.php');
         $this->assertFiles(__DIR__ . '/files/expected.module.template.latte', __DIR__ . '/output/Demo/Application/Admin/Foo/Homepage/default.latte');
         $this->assertFiles(__DIR__ . '/files/expected.module.layout.latte', __DIR__ . '/output/Demo/Application/Admin/Foo/@layout.latte');
+    }
+
+
+
+    public function testFileNames()
+    {
+        $configurator = $this->prepareConfigurator();
+        $configurator->addConfig(__DIR__ . '/config/config.command2.neon');
+
+        /** @var \Nette\DI\Container $container */
+        $container = $configurator->createContainer();
+
+        /** @var ControlCommand $commandService */
+        $commandService = $container->getByType('Joseki\FileTemplate\Console\Command\ControlCommand');
+
+        $application = new Application();
+        $application->add($commandService);
+
+        $command = $application->find('joseki:file-template');
+        $commandTester = new CommandTester($command);
+
+        $helper = $command->getHelper('question');
+        $helper->setInputStream($this->getInputStream(sprintf('%sNAME%s', PHP_EOL, PHP_EOL)));
+
+        $commandTester->execute(
+            [
+                'command' => $command->getName(),
+                'name' => 'example2'
+            ]
+        );
+
+        Assert::true(file_exists(__DIR__ . '/output/example2/NAMEGridFactory1.php'));
+        Assert::true(file_exists(__DIR__ . '/output/example2/NAMEGridFactory.php'));
+        Assert::true(file_exists(__DIR__ . '/output/example2/template.latte'));
     }
 
 

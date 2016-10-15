@@ -33,7 +33,7 @@ class ExtensionTest extends \Tester\TestCase
     public function testOneCommand()
     {
         $configurator = $this->prepareConfigurator();
-        $configurator->addConfig(__DIR__ . '/config/config.one.command.neon', $configurator::NONE);
+        $configurator->addConfig(__DIR__ . '/config/config.one.command.neon');
 
         /** @var \Nette\DI\Container $container */
         $container = $configurator->createContainer();
@@ -56,7 +56,7 @@ class ExtensionTest extends \Tester\TestCase
     public function testVariableDefaults()
     {
         $configurator = $this->prepareConfigurator();
-        $configurator->addConfig(__DIR__ . '/config/config.variable.defaults.neon', $configurator::NONE);
+        $configurator->addConfig(__DIR__ . '/config/config.variable.defaults.neon');
 
         /** @var \Nette\DI\Container $container */
         $container = $configurator->createContainer();

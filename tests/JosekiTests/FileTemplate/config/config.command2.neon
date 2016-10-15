@@ -1,0 +1,20 @@
+FileTemplate:
+  # root dir for new files
+  rootDir: '%appDir%/output/example2' # [OPTIONAL], %appDir% is default
+
+  # list of file templates groups
+  commands:
+    example2: # group name
+      variables: ['NAME']
+      templates:
+        CONTROL_FILE: %appDir%/templates/control.txt
+        FACTORY_FILE: %appDir%/templates/factory.txt
+        TEMPLATE_FILE: %appDir%/templates/template.txt
+      defaults:
+        CONTROL_FILE: '${CONTROL_NAME}.php'
+        FACTORY_FILE: '${FACTORY_NAME}.php'
+        CONTROL_NAME: '${NAME}GridFactory1'
+        FACTORY_NAME: '${NAME}GridFactory'
+        TEMPLATE_FILE: 'template.latte'
+
+

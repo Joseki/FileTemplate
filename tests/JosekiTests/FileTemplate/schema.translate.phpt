@@ -113,10 +113,10 @@ class SchemaTranslationTest extends \Tester\TestCase
         /** @var Schema $schema */
         $schema = \Nette\PhpGenerator\Helpers::createObject('Joseki\FileTemplate\Schema', array(
             "\x00Joseki\\FileTemplate\\Schema\x00files" => array(
-                'PRESENTER_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.presenter.txt',
-                'HOMEPAGE_PRESENTER_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.presenter.homepage.txt',
-                'TEMPLATE_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.template.txt',
-                'LAYOUT_FILE' => 'C:\wamp\wamp\www\Joseki\FileTemplate\tests\JosekiTests\FileTemplate/templates/module.layout.txt',
+                'PRESENTER_FILE' => '/path/to/Joseki/FileTemplate/tests/JosekiTests/FileTemplate/templates/module.presenter.txt',
+                'HOMEPAGE_PRESENTER_FILE' => '/path/to/Joseki/FileTemplate/tests/JosekiTests/FileTemplate/templates/module.presenter.homepage.txt',
+                'TEMPLATE_FILE' => '/path/to/Joseki/FileTemplate/tests/JosekiTests/FileTemplate/templates/module.template.txt',
+                'LAYOUT_FILE' => '/path/to/Joseki/FileTemplate/tests/JosekiTests/FileTemplate/templates/module.layout.txt',
             ),
             "\x00Joseki\\FileTemplate\\Schema\x00variables" => array(
                 'NAMESPACE' => 'Demo\Application\${PARENT_MODULE}\${NAME}',
@@ -127,6 +127,7 @@ class SchemaTranslationTest extends \Tester\TestCase
                 'HOMEPAGE_PRESENTER_FILE' => 'HomepagePresenter.php',
                 'TEMPLATE_FILE' => 'Homepage/default.latte',
                 'LAYOUT_FILE' => '@layout.latte',
+                'FOO' => 'bar',
             ),
             "\x00Joseki\\FileTemplate\\Schema\x00resolved" => FALSE,
         ));
@@ -135,6 +136,8 @@ class SchemaTranslationTest extends \Tester\TestCase
         Assert::equal('Foo', $schema->getVariable('NAME'));
         Assert::equal('Admin', $schema->getVariable('PARENT_MODULE'));
         Assert::equal('Demo\Application\Admin\Foo', $schema->getVariable('NAMESPACE'));
+        Assert::equal('bar', $schema->getVariable('FOO'));
+        Assert::equal('FOO turns into bar', $schema->translate('FOO turns into ${FOO}'));
     }
 
 }

@@ -108,6 +108,7 @@ class ControlCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $schema = $this->schemaList[$this->selectedSchema];
+        $schema->resolveVariables();
         $dir = $this->rootDir . '/' . $this->selectedDir;
         foreach ($schema->getFiles() as $var => $templatePath) {
             $fileName = $dir . '/' . $schema->getVariable($var);
